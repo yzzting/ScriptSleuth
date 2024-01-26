@@ -4,10 +4,14 @@
  */
 import path from 'node:path'
 import fs from 'node:fs'
+import { exec } from 'node:child_process'
 import { Command } from 'commander'
 import { select } from '@inquirer/prompts'
 
 const program = new Command()
+
+// command line prefix can pass in as an argument npm yarn pnpm or other
+let prefix = 'npm'
 
 interface IScript {
   [key: string]: string
@@ -58,9 +62,30 @@ const scriptPrompt = {
  * @description: Use the prompt to get the script name
  * @return void
  */
-async function getScriptName(){
-  const selectScript = await select(scriptPrompt)
-  console.log(selectScript)
+function getScriptName(){
+  select(scriptPrompt)
+    .then((answer) => {
+      runScript(answer)
+    })
+    .catch((err) => {
+      process.exit(1)
+    })
+}
+
+/**
+ * @param {string} scriptName
+ * @description: run script
+ * @return void
+ */
+function runScript(scriptName: string) {
+  if (!scriptName) {
+    console.log('No script name provided')
+    process.exit(1)
+  }
+  const command = `${prefix} run ${scriptName}`
+  const child = exec(command)
+  child.stdout?.pipe(process.stdout)
+  child.stderr?.pipe(process.stderr)
 }
 
 program
