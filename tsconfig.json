@@ -107,6 +107,7 @@
   },
     "include": [
         "./index.ts",
+        "./.eslintrc.js"
     ],
     "exclude": [
         "node_modules",

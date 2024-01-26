@@ -16,19 +16,17 @@ const program = new Command()
 // command line prefix can pass in as an argument npm yarn pnpm or other
 let prefix = 'npm'
 
-interface IScript {
-  [key: string]: string
-}
+type IScript = Record<string, string>
 
 /**
  * @description: read package.json version description script
  * @return { string, string }
  */
-function getPackageInfo(): { version: string, description: string } {
-  const pkg = require('./package.json')
+function getPackageInfo (): { version: string, description: string } {
+  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, './package.json'), 'utf-8'))
   return {
     version: pkg.version,
-    description: pkg.description,
+    description: pkg.description
   }
 }
 
@@ -40,11 +38,11 @@ const scripts: IScript = {}
  * @description: check current directory has package.json
  * @return boolean
  */
-function hasPackageJson(): boolean {
+function hasPackageJson (): boolean {
   const packageJsonPath = path.join(process.cwd(), 'package.json')
   try {
     fs.accessSync(packageJsonPath, fs.constants.F_OK)
-    const packageJson = require(packageJsonPath)
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
     for (const key in packageJson.scripts) {
       scripts[key] = packageJson.scripts[key]
     }
@@ -58,7 +56,7 @@ function hasPackageJson(): boolean {
  * @description: Use the prompt to get the script name
  * @return void
  */
-function getScriptName(){
+function getScriptName (): void {
   const options = program.opts()
   if (options.prefix) {
     prefix = options.prefix
@@ -81,7 +79,7 @@ function getScriptName(){
     .then((answer) => {
       runScript(answer)
     })
-    .catch((err) => {
+    .catch(() => {
       process.exit(1)
     })
 }
@@ -91,8 +89,8 @@ function getScriptName(){
  * @description: run script
  * @return void
  */
-function runScript(scriptName: string) {
-  if (!scriptName) {
+function runScript (scriptName: string): void {
+  if (scriptName === '') {
     console.log('No script name provided')
     process.exit(1)
   }
@@ -119,6 +117,6 @@ program
   })
   .parse(process.argv)
 
-if (!process.argv.length) {
+if (process.argv.length === 0) {
   program.help()
 }
