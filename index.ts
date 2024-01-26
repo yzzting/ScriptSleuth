@@ -1,10 +1,13 @@
+#!/usr/bin/env node
+
 /**
  * @Author: ZenYang
  * @Date: 2024/1/25 17:02
  */
+
 import path from 'node:path'
 import fs from 'node:fs'
-import { exec } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { Command } from 'commander'
 import { select } from '@inquirer/prompts'
 
@@ -19,18 +22,19 @@ interface IScript {
 
 /**
  * @description: read package.json version description script
- * @return { string, string, IScript }
+ * @return { string, string }
  */
-function getPackageInfo(): { version: string, description: string, scripts: IScript } {
+function getPackageInfo(): { version: string, description: string } {
   const pkg = require('./package.json')
   return {
     version: pkg.version,
     description: pkg.description,
-    scripts: pkg.scripts
   }
 }
 
-const { version, description, scripts } = getPackageInfo()
+const { version, description } = getPackageInfo()
+
+const scripts: IScript = {}
 
 /**
  * @description: check current directory has package.json
@@ -40,22 +44,14 @@ function hasPackageJson(): boolean {
   const packageJsonPath = path.join(process.cwd(), 'package.json')
   try {
     fs.accessSync(packageJsonPath, fs.constants.F_OK)
+    const packageJson = require(packageJsonPath)
+    for (const key in packageJson.scripts) {
+      scripts[key] = packageJson.scripts[key]
+    }
     return true
   } catch (e) {
     return false
   }
-}
-
-// transform scripts to array for inquirer { value: string, name: string }
-const scriptChoices = Object.keys(scripts).map((key) => ({
-  value: key,
-  name: `${key}: ${scripts[key]}`
-}))
-
-// create a prompt for the user to choose a script
-const scriptPrompt = {
-  message: 'Which script would you like to run ?',
-  choices: scriptChoices
 }
 
 /**
@@ -68,6 +64,19 @@ function getScriptName(){
     prefix = options.prefix
     console.log(`Using ${prefix} to run scripts`)
   }
+
+  // transform scripts to array for inquirer { value: string, name: string }
+  const scriptChoices = Object.keys(scripts).map((key) => ({
+    value: key,
+    name: `${key}: ${scripts[key]}`
+  }))
+
+  // create a prompt for the user to choose a script
+  const scriptPrompt = {
+    message: 'Which script would you like to run ?',
+    choices: scriptChoices
+  }
+
   select(scriptPrompt)
     .then((answer) => {
       runScript(answer)
@@ -88,9 +97,12 @@ function runScript(scriptName: string) {
     process.exit(1)
   }
   const command = `${prefix} run ${scriptName}`
-  const child = exec(command)
-  child.stdout?.pipe(process.stdout)
-  child.stderr?.pipe(process.stderr)
+  console.log(`Running ${command}`)
+  const [cmd, ...args] = command.split(' ')
+  const child = spawn(cmd, args, { stdio: 'inherit' })
+  child.on('exit', () => {
+    process.exit(1)
+  })
 }
 
 program

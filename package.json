@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsc && node index.js"
   },
+  "bin": {
+    "sslist": "./index.js"
+  },
   "author": "ZenYang",
   "license": "ISC",
   "devDependencies": {
