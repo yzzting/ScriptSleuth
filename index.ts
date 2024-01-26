@@ -54,7 +54,7 @@ const scriptChoices = Object.keys(scripts).map((key) => ({
 
 // create a prompt for the user to choose a script
 const scriptPrompt = {
-  message: 'Which script would you like to run?',
+  message: 'Which script would you like to run ?',
   choices: scriptChoices
 }
 
@@ -63,6 +63,11 @@ const scriptPrompt = {
  * @return void
  */
 function getScriptName(){
+  const options = program.opts()
+  if (options.prefix) {
+    prefix = options.prefix
+    console.log(`Using ${prefix} to run scripts`)
+  }
   select(scriptPrompt)
     .then((answer) => {
       runScript(answer)
@@ -92,6 +97,7 @@ program
   .name('ScriptSleuth')
   .version(version)
   .description(description)
+  .option('-p --prefix <prefix>', 'The prefix to use for the script command', '')
   .action(() => {
     if (!hasPackageJson()) {
       console.log('No package.json found')
@@ -99,8 +105,7 @@ program
     }
     getScriptName()
   })
-
-program.parse(process.argv)
+  .parse(process.argv)
 
 if (!process.argv.length) {
   program.help()
