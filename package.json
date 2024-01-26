@@ -3,15 +3,20 @@
   "version": "0.0.1",
   "description": "For a project that checks the script list in package.json",
   "main": "index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yzzting/ScriptSleuth.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
     "dev": "npx tsc && node index.js"
   },
   "bin": {
     "sslist": "./index.js"
   },
-  "author": "ZenYang",
-  "license": "ISC",
+  "author": "ZenYang <yzzting@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.11.6",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
