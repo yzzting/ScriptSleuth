@@ -41,7 +41,7 @@ async function getPackageInfo() {
 async function hasPackageJson() {
     const packageJsonPath = node_path_1.default.join(process.cwd(), 'package.json');
     try {
-        await node_fs_1.promises.access(packageJsonPath, node_fs_1.promises.constants.F_OK);
+        await node_fs_1.promises.access(packageJsonPath);
         const packageJson = JSON.parse(await node_fs_1.promises.readFile(packageJsonPath, 'utf-8'));
         Object.assign(scripts, packageJson.scripts);
         return true;

@@ -42,7 +42,7 @@ async function getPackageInfo (): Promise<{ version: string, description: string
 async function hasPackageJson (): Promise<boolean> {
   const packageJsonPath = path.join(process.cwd(), 'package.json')
   try {
-    await fs.access(packageJsonPath, fs.constants.F_OK)
+    await fs.access(packageJsonPath)
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'))
     Object.assign(scripts, packageJson.scripts)
     return true
