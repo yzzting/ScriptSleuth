@@ -2,7 +2,7 @@
  * @Author: ZenYang
  * @Date: 2024/1/26 15:26
  */
-const { exec} = require('child_process')
+const { exec } = require('child_process')
 const pkg = require('./package.json')
 
 describe('scriptSleuth', () => {

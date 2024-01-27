@@ -107,7 +107,8 @@
   },
     "include": [
         "./index.ts",
-        "./.eslintrc.js"
+        "./.eslintrc.js",
+        "./scriptSleuth.test.js"
     ],
     "exclude": [
         "node_modules",
