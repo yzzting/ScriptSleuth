@@ -13,8 +13,22 @@
     "dev": "npx tsc && node index.js"
   },
   "bin": {
-    "sslist": "./index.js"
+    "scsl": "./index.js"
   },
+  "keywords": [
+    "npm-scripts",
+    "package.json",
+    "script-audit",
+    "dev-tools",
+    "nodejs",
+    "automation",
+    "script-management",
+    "cli",
+    "command-line",
+    "development",
+    "script-checker",
+    "build-tools"
+  ],
   "author": "ZenYang <yzzting@gmail.com>",
   "license": "MIT",
   "devDependencies": {
