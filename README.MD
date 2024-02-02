@@ -1,4 +1,4 @@
-![NPM](https://img.shields.io/badge/npm-v1.0.0-blue)
+[![NPM](https://img.shields.io/badge/npm-v1.0.0-blue)](https://www.npmjs.com/package/scriptsleuth?activeTab=readme)
 # ScriptSleuth
 
 ScriptSleuth is a Node.js command-line interface (CLI) tool designed to help developers quickly run scripts defined in a `package.json` file.
